@@ -1,0 +1,477 @@
+
+  Memory set to   1.863 GiB by Python driver.
+  Threads set to 2 by Python driver.
+
+Scratch directory: /tmp/
+   => Libint2 <=
+
+    Primary   basis highest AM E, G, H:  6, 6, 3
+    Auxiliary basis highest AM E, G, H:  7, 7, 4
+    Onebody   basis highest AM E, G, H:  -, -, -
+    Solid Harmonics ordering:            Gaussian
+
+*** tstart() called on BADWLRZ-CM14276
+*** at Wed Apr 22 15:07:59 2026
+
+   => Loading Basis Set <=
+
+    Name: CC-PVDZ
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1   entry O          line   198 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz.gbs 
+    atoms 2-3 entry H          line    22 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+               by Justin Turney, Rob Parrish, Andy Simmonett
+                          and Daniel G. A. Smith
+                              RHF Reference
+                        2 Threads,   1907 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c1
+    Full point group: C2v
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+         O            0.000000000000     0.000000000000     0.117790000000    15.994914619570
+         H            0.000000000000     0.755453000000    -0.471161000000     1.007825032230
+         H            0.000000000000    -0.755453000000    -0.471161000000     1.007825032230
+
+  Running in c1 symmetry.
+
+  Rotational constants: A =     25.18392  B =     14.65435  C =      9.26380 [cm^-1]
+  Rotational constants: A = 754994.81881  B = 439326.25893  C = 277721.84167 [MHz]
+  Nuclear repulsion =    9.189193224968481
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 10
+  Nalpha       = 5
+  Nbeta        = 5
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-10
+  Density threshold  = 1.00e-08
+  Integral threshold = 1.00e-12
+
+  ==> Primary Basis <==
+
+  Basis Set: CC-PVDZ
+    Blend: CC-PVDZ
+    Number of shells: 12
+    Number of basis functions: 24
+    Number of Cartesian functions: 25
+    Spherical Harmonics?: true
+    Max angular momentum: 2
+
+  ==> Integral Setup <==
+
+  Using in-core PK algorithm.
+   Calculation information:
+      Number of atoms:                   3
+      Number of AO shells:              12
+      Number of primitives:             32
+      Number of atomic orbitals:        25
+      Number of basis functions:        24
+
+      Integral cutoff                 1.00e-12
+      Number of threads:                 2
+
+  Performing in-core PK
+  Using 90300 doubles for integral storage.
+  We computed 3337 shell quartets total.
+  Whereas there are 3081 unique shell quartets.
+     8.31 percent of shell quartets recomputed by reordering.
+
+  ==> DiskJK: Disk-Based J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Memory [MiB]:             1430
+    Schwarz Cutoff:          1E-12
+
+    OpenMP threads:              2
+
+  Minimum eigenvalue in the overlap matrix is 3.4172966107E-02.
+  Reciprocal condition number of the overlap matrix is 9.2079975511E-03.
+    Using symmetric orthogonalization.
+
+  ==> Pre-Iterations <==
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
+
+   -------------------------
+    Irrep   Nso     Nmo    
+   -------------------------
+     A         24      24 
+   -------------------------
+    Total      24      24
+   -------------------------
+
+  ==> Iterations <==
+
+                        Total Energy        Delta E     RMS |[F,P]|
+
+   @RHF iter SAD:   -76.48787683256822   -7.64879e+01   0.00000e+00 
+   @RHF iter   1:   -75.93109782260589    5.56779e-01   1.85599e-02 ADIIS/DIIS
+   @RHF iter   2:   -76.01217646059335   -8.10786e-02   8.48774e-03 ADIIS/DIIS
+   @RHF iter   3:   -76.02598506044288   -1.38086e-02   1.76635e-03 ADIIS/DIIS
+   @RHF iter   4:   -76.02674067859155   -7.55618e-04   2.50567e-04 ADIIS/DIIS
+   @RHF iter   5:   -76.02676703451021   -2.63559e-05   4.90334e-05 DIIS
+   @RHF iter   6:   -76.02676797152431   -9.37014e-07   6.15627e-06 DIIS
+   @RHF iter   7:   -76.02676799684785   -2.53235e-08   9.86367e-07 DIIS
+   @RHF iter   8:   -76.02676799735153   -5.03675e-10   9.90198e-08 DIIS
+   @RHF iter   9:   -76.02676799735465   -3.12639e-12   1.03941e-08 DIIS
+   @RHF iter  10:   -76.02676799735477   -1.13687e-13   3.18059e-09 DIIS
+  Energy and wave function converged.
+
+
+  ==> Post-Iterations <==
+
+    Orbital Energies [Eh]
+    ---------------------
+
+    Doubly Occupied:                                                      
+
+       1A    -20.550758     2A     -1.336673     3A     -0.698199  
+       4A     -0.567259     5A     -0.493243  
+
+    Virtual:                                                              
+
+       6A      0.185380     7A      0.256205     8A      0.787501  
+       9A      0.855505    10A      1.163864    11A      1.200276  
+      12A      1.253750    13A      1.441089    14A      1.477387  
+      15A      1.672353    16A      1.866572    17A      1.936514  
+      18A      2.450293    19A      2.489513    20A      3.287166  
+      21A      3.336783    22A      3.511420    23A      3.862108  
+      24A      4.149046  
+
+    Final Occupation by Irrep:
+              A 
+    DOCC [     5 ]
+    NA   [     5 ]
+    NB   [     5 ]
+
+  @RHF Final Energy:   -76.02676799735477
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =              9.1891932249684807
+    One-Electron Energy =                -123.1396572862837218
+    Two-Electron Energy =                  37.9236960639604774
+    Total Energy =                        -76.0267679973547672
+
+Computation Completed
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+
+Properties computed using the SCF density matrix
+
+
+ Multipole Moments:
+
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
+
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :         -0.0000000            0.0000000           -0.0000000
+ Dipole Z            :         -0.8116213           -0.0000038           -0.8116251
+ Magnitude           :                                                    0.8116251
+
+ ------------------------------------------------------------------------------------
+
+*** tstop() called on BADWLRZ-CM14276 at Wed Apr 22 15:07:59 2026
+Module time:
+	user time   =       0.31 seconds =       0.01 minutes
+	system time =       0.06 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.31 seconds =       0.01 minutes
+	system time =       0.06 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+OEProp: No title given, name of density matrix used for the following properties is 'SCF density'
+
+ Multipole Moments:
+
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
+
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :          0.0000000            0.0000000            0.0000000
+ Dipole Y            :         -0.0000000            0.0000000           -0.0000000
+ Dipole Z            :         -0.8116213           -0.0000038           -0.8116251
+ Magnitude           :                                                    0.8116251
+
+ ------------------------------------------------------------------------------------
+
+*** tstart() called on BADWLRZ-CM14276
+*** at Wed Apr 22 15:08:18 2026
+
+   => Libint2 <=
+
+    Primary   basis highest AM E, G, H:  6, 6, 3
+    Auxiliary basis highest AM E, G, H:  7, 7, 4
+    Onebody   basis highest AM E, G, H:  -, -, -
+    Solid Harmonics ordering:            Gaussian
+   => Loading Basis Set <=
+
+    Name: CC-PVDZ
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1   entry O          line   198 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz.gbs 
+    atoms 2-3 entry H          line    22 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+               by Justin Turney, Rob Parrish, Andy Simmonett
+                          and Daniel G. A. Smith
+                              RHF Reference
+                        2 Threads,   1907 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: c1
+    Full point group: C2v
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+         O            0.000000000000     0.000000000000     0.117790000000    15.994914619570
+         H            0.000000000000     0.755453000000    -0.471161000000     1.007825032230
+         H            0.000000000000    -0.755453000000    -0.471161000000     1.007825032230
+
+  Running in c1 symmetry.
+
+  Rotational constants: A =     25.18392  B =     14.65435  C =      9.26380 [cm^-1]
+  Rotational constants: A = 754994.81881  B = 439326.25893  C = 277721.84167 [MHz]
+  Nuclear repulsion =    9.189193224968481
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 10
+  Nalpha       = 5
+  Nbeta        = 5
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is DF.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-10
+  Density threshold  = 1.00e-08
+  Integral threshold = 1.00e-12
+
+  ==> Primary Basis <==
+
+  Basis Set: CC-PVDZ
+    Blend: CC-PVDZ
+    Number of shells: 12
+    Number of basis functions: 24
+    Number of Cartesian functions: 25
+    Spherical Harmonics?: true
+    Max angular momentum: 2
+
+   => Loading Basis Set <=
+
+    Name: (CC-PVDZ AUX)
+    Role: JKFIT
+    Keyword: DF_BASIS_SCF
+    atoms 1   entry O          line   221 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz-jkfit.gbs 
+    atoms 2-3 entry H          line    51 file /opt/anaconda3/envs/psi4/share/psi4/basis/cc-pvdz-jkfit.gbs 
+
+  ==> Integral Setup <==
+
+  DFHelper Memory: AOs need 0.001 GiB; user supplied 1.397 GiB. 
+  SCF_SUBTYPE=INCORE selected. In-core MEM_DF algorithm will be used.
+  Using in-core AOs.
+
+  ==> MemDFJK: Density-Fitted J/K Matrices <==
+
+    J tasked:                   Yes
+    K tasked:                   Yes
+    wK tasked:                   No
+    OpenMP threads:               2
+    Memory [MiB]:              1430
+    Algorithm:                 Core
+    Schwarz Cutoff:           1E-12
+    Mask sparsity (%):       0.0000
+    Fitting Condition:        1E-10
+
+   => Auxiliary Basis Set <=
+
+  Basis Set: (CC-PVDZ AUX)
+    Blend: CC-PVDZ-JKFIT
+    Number of shells: 42
+    Number of basis functions: 116
+    Number of Cartesian functions: 131
+    Spherical Harmonics?: true
+    Max angular momentum: 3
+
+  Minimum eigenvalue in the overlap matrix is 3.4172966107E-02.
+  Reciprocal condition number of the overlap matrix is 9.2079975511E-03.
+    Using symmetric orthogonalization.
+
+  ==> Pre-Iterations <==
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF (no occupation information).
+
+   -------------------------
+    Irrep   Nso     Nmo    
+   -------------------------
+     A         24      24 
+   -------------------------
+    Total      24      24
+   -------------------------
+
+  ==> Iterations <==
+
+                           Total Energy        Delta E     RMS |[F,P]|
+
+   @DF-RHF iter SAD:   -76.48785401412185   -7.64879e+01   0.00000e+00 
+   @DF-RHF iter   1:   -75.93108750946007    5.56767e-01   1.85591e-02 ADIIS/DIIS
+   @DF-RHF iter   2:   -76.01215755544315   -8.10700e-02   8.48649e-03 ADIIS/DIIS
+   @DF-RHF iter   3:   -76.02596394092812   -1.38064e-02   1.76620e-03 ADIIS/DIIS
+   @DF-RHF iter   4:   -76.02671960174347   -7.55661e-04   2.50733e-04 ADIIS/DIIS
+   @DF-RHF iter   5:   -76.02674599356814   -2.63918e-05   4.90591e-05 DIIS
+   @DF-RHF iter   6:   -76.02674693110187   -9.37534e-07   6.16027e-06 DIIS
+   @DF-RHF iter   7:   -76.02674695646174   -2.53599e-08   9.86990e-07 DIIS
+   @DF-RHF iter   8:   -76.02674695696589   -5.04158e-10   9.89997e-08 DIIS
+   @DF-RHF iter   9:   -76.02674695696902   -3.12639e-12   1.03376e-08 DIIS
+   @DF-RHF iter  10:   -76.02674695696912   -9.94760e-14   3.17019e-09 DIIS
+  Energy and wave function converged.
+
+
+  ==> Post-Iterations <==
+
+    Orbital Energies [Eh]
+    ---------------------
+
+    Doubly Occupied:                                                      
+
+       1A    -20.550764     2A     -1.336680     3A     -0.698203  
+       4A     -0.567256     5A     -0.493237  
+
+    Virtual:                                                              
+
+       6A      0.185384     7A      0.256202     8A      0.787536  
+       9A      0.855533    10A      1.164010    11A      1.200348  
+      12A      1.253844    13A      1.441467    14A      1.477807  
+      15A      1.672936    16A      1.866820    17A      1.937136  
+      18A      2.450444    19A      2.489804    20A      3.287819  
+      21A      3.337279    22A      3.512091    23A      3.862702  
+      24A      4.149350  
+
+    Final Occupation by Irrep:
+              A 
+    DOCC [     5 ]
+    NA   [     5 ]
+    NB   [     5 ]
+
+  @DF-RHF Final Energy:   -76.02674695696912
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =              9.1891932249684807
+    One-Electron Energy =                -123.1396018378398196
+    Two-Electron Energy =                  37.9236616559022224
+    Total Energy =                        -76.0267469569691201
+
+Computation Completed
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+
+Properties computed using the SCF density matrix
+
+
+ Multipole Moments:
+
+ ------------------------------------------------------------------------------------
+     Multipole            Electronic (a.u.)      Nuclear  (a.u.)        Total (a.u.)
+ ------------------------------------------------------------------------------------
+
+ L = 1.  Multiply by 2.5417464519 to convert [e a0] to [Debye]
+ Dipole X            :         -0.0000000            0.0000000           -0.0000000
+ Dipole Y            :         -0.0000000            0.0000000           -0.0000000
+ Dipole Z            :         -0.8117613           -0.0000038           -0.8117650
+ Magnitude           :                                                    0.8117650
+
+ ------------------------------------------------------------------------------------
+
+
+         ---------------------------------------------------------
+                       CPSCF Linear Response Solver               
+                 by Marvin Lechner and Daniel G. A. Smith         
+         ---------------------------------------------------------
+
+   ==> Requested Responses <==
+
+    Dipole polarizabilities
+
+   ==> Coupled-Perturbed RHF Solver <==
+
+    Maxiter             =         100
+    Convergence         =   1.000E-06
+    Number of equations =           3
+   -----------------------------------------------------
+     Iter   Residual RMS      Max RMS  Remain  Time [s]
+   -----------------------------------------------------
+    Guess      1.978e+00    2.015e+00       3         0
+        1      5.309e-01    7.003e-01       3         0
+        2      1.513e-01    1.986e-01       3         0
+        3      3.221e-02    5.362e-02       3         0
+        4      5.757e-03    1.016e-02       3         0
+        5      9.033e-04    1.763e-03       3         0
+        6      1.231e-04    2.787e-04       3         0
+        7      1.655e-05    4.364e-05       3         0
+        8      1.243e-06    3.170e-06       1         0
+        9      2.795e-07    2.780e-07       0         0
+   -----------------------------------------------------
+
+    Solver has converged.
+
+
+   ==> Response Properties <==
+
+    => Dipole polarizabilities <=
+
+              X          Y          Z     
+    ----- ---------- ---------- ----------
+      X      3.04010   -0.00000    0.00000
+      Y     -0.00000    6.90994   -0.00000
+      Z      0.00000   -0.00000    5.10894
+
+*** tstop() called on BADWLRZ-CM14276 at Wed Apr 22 15:08:18 2026
+Module time:
+	user time   =       0.13 seconds =       0.00 minutes
+	system time =       0.02 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =      12.60 seconds =       0.21 minutes
+	system time =       6.08 seconds =       0.10 minutes
+	total time  =         19 seconds =       0.32 minutes

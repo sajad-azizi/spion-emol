@@ -1,0 +1,504 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{amsmath,amssymb,mathtools}
+\usepackage{booktabs,array,enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage{titlesec}
+\usepackage{microtype}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.6em}{}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\newcommand{\MF}[1]{M_F\!=\!#1}
+\newcommand{\ket}[1]{\lvert #1 \rangle}
+\newcommand{\bra}[1]{\langle #1 \rvert}
+\newcommand{\matel}[3]{\langle #1 | #2 | #3 \rangle}
+\newcommand{\dd}{\,\mathrm d}
+\newcommand{\one}{\mathbb{1}}
+
+\title{\textbf{Time-dependent Schr\"odinger equation for the multichannel\\
+ZEPE problem in the $^{85}$Rb halo: full-TDSE and hybrid recipes}}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\vspace{-2.2em}
+
+\section*{Goal and warning}
+
+The goal is to compute the channel-resolved dissociation spectrum
+\begin{equation}
+  \frac{dP^{(M_F)}}{dE_f}
+\end{equation}
+for the $^{85}$Rb Feshbach halo at $B=155.04$ G driven by a finite-bandwidth
+single-helicity RF pulse.  This note gives two numerically distinct routes:
+
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item \textbf{Full multichannel TDSE:} include the blocks
+$\MF{-5},\MF{-4},\MF{-3},\MF{-2}$ explicitly and propagate them together.
+This is conceptually clean, but the $\MF{-5}$ virtual block can require a
+large spectral cutoff if it is represented by box eigenstates.
+\item \textbf{Hybrid TDSE + resolvent:} propagate the open/observable blocks in
+time and eliminate the far-detuned $\MF{-5}$ block by an inhomogeneous
+resolvent.  This is usually the recommended production method, but it is a
+hybrid method, not a literal full TDSE over all blocks.
+\end{enumerate}
+
+The clean ZEPE protocol requires \textbf{single-helicity $\sigma^+$ RF}.  A
+linearly polarized transverse RF field contains both helicities and can
+reintroduce mixed-helicity paths.  Therefore this recipe is written for the
+$\sigma^+$ component.  Linear polarization can be tested later as an
+imperfection, not used as the baseline isolation protocol.
+
+\medskip\hrule\medskip
+
+\section{System, Hamiltonian, and fixed numerical scales}
+
+\subsection{Physical parameters}
+
+Two ground-state $^{85}$Rb atoms are treated in relative $s$-wave motion.  The
+working square-well model is calibrated to the $^{85}$Rb halo at $B=155.04$ G.
+
+\begin{center}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Symbol & Recommended value & Meaning \\
+\midrule
+$m_{^{85}{\rm Rb}}$ & $84.911789738\,m_u$ & atomic mass \\
+$\mu$ & $77{,}392\,m_e$ & reduced mass \\
+$B$ & $155.04$ G & static bias field \\
+$E_h/h$ & $-10.108$ kHz & target halo energy \\
+$1/\kappa$ & $\simeq2.05\times10^3\,a_0$ & halo size \\
+$r_0$ & $82.10\,a_0$ & square-well range \\
+$V_T$ & $9.6930959$ GHz & triplet depth after sign correction \\
+$V_S$ & $1.02V_T$ & singlet depth \\
+$L$ & $5\times10^5\,a_0$ & large box for open near-threshold states \\
+$\tau_0$ & $25$--$50\,\mu$s & useful pulse-ramp scale \\
+$\omega/(2\pi)$ & $50$--$100$ kHz & clean ZEPE carrier window \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Relative to the $\MF{-4}$ open-channel threshold, the relevant two-channel
+blocks have asymptotic thresholds
+\begin{align}
+\MF{-4}:&\quad \{0,\;2605.76\}\ {\rm MHz},\\
+\MF{-3}:&\quad \{-77.42,\;2532.24\}\ {\rm MHz},\\
+\MF{-5}:&\quad \{2683.18,\;5448.24\}\ {\rm MHz},\\
+\MF{-2}:&\quad \text{computed from the same Breit--Rabi basis.}
+\end{align}
+The lower $\MF{-5}$ threshold is $2.68$ GHz above the entrance threshold.  This
+is the central reason that $\MF{-5}$ is a virtual, far-detuned block for all kHz
+RF carriers.
+
+\subsection{Field-free Hamiltonian}
+
+For each fixed-$M_F$ block,
+\begin{equation}
+\hat H_0=-\frac{\hbar^2}{2\mu}\frac{d^2}{dr^2}\one + \hat V_{\rm short}(r)+\hat H_{\rm hf+Z}(B).
+\end{equation}
+The one-atom hyperfine-Zeeman Hamiltonian is diagonalized in the
+$\ket{m_I,m_S}$ basis,
+\begin{equation}
+\hat H_{\rm hf+Z}^{(1)}=a_{\rm hf}\hat{\mathbf I}\cdot\hat{\mathbf S}
++\mu_B B(g_S\hat S_z+g_I\hat I_z),
+\end{equation}
+then two-atom symmetrized channel states are formed at fixed $M_F$.
+
+The square-well spin potential is
+\begin{equation}
+\hat V_{\rm short}= -V_S\hat P_s-V_T\hat P_t,
+\end{equation}
+with
+\begin{equation}
+\hat P_s=\frac14\one-\hat{\mathbf s}_1\cdot\hat{\mathbf s}_2,
+\qquad
+\hat P_t=\frac34\one+\hat{\mathbf s}_1\cdot\hat{\mathbf s}_2.
+\end{equation}
+Therefore
+\begin{equation}
+\boxed{\hat V_{\rm short}(r)=\Theta(r_0-r)
+\left[-\bar V\one+\Delta V\,\hat{\mathbf s}_1\cdot\hat{\mathbf s}_2\right]},
+\qquad
+\bar V=\frac{V_S+3V_T}{4},\quad \Delta V=V_S-V_T.
+\end{equation}
+The positive sign in front of $\Delta V\,\hat{\mathbf s}_1\cdot\hat{\mathbf s}_2$
+is important.
+
+The coupled radial eigenproblem is
+\begin{equation}
+-\frac{\hbar^2}{2\mu}u_\alpha''(r)+E_\alpha^{\rm th}u_\alpha(r)
++\sum_\beta V_{\alpha\beta}(r)u_\beta(r)=E u_\alpha(r),
+\qquad u_\alpha(0)=0.
+\end{equation}
+For box eigenstates use $u_\alpha(L)=0$.  For true scattering states use
+asymptotic matching; for the closed resolvent use decaying Robin boundary
+conditions.
+
+\subsection{Single-helicity RF coupling}
+
+Use a circular $\sigma^+$ component, not a linear $x$ polarization, for the
+clean isolation calculation.  In the dressed two-atom basis define
+\begin{equation}
+\eta^{(+)}_{\alpha\beta}=\matel{\alpha}{\hat S_{1,+}+\hat S_{2,+}}{\beta},
+\qquad
+\eta^{(-)}=(\eta^{(+)})^\dagger.
+\end{equation}
+The Hermitian classical RF interaction may be written schematically as
+\begin{equation}
+\hat V_{\rm RF}(t)=\frac{\Omega_R}{2}\,\chi(t)
+\left[e^{-i\omega t}\hat\eta^{(+)}+e^{+i\omega t}\hat\eta^{(-)}\right],
+\qquad \Omega_R=\mu_B g_S B_{\rm RF},
+\end{equation}
+where $\Omega_R$ is an energy in atomic units if $\hbar=1$ is used in the code.
+Absorption of a $\sigma^+$ photon raises $M_F$ by one unit:
+\begin{equation}
+\MF{-4}\xrightarrow{\rm absorb}\MF{-3},
+\qquad
+\MF{-3}\xrightarrow{\rm absorb}\MF{-2}.
+\end{equation}
+Stimulated emission of a $\sigma^+$ photon lowers $M_F$ by one unit:
+\begin{equation}
+\MF{-4}\xrightarrow{\rm emit}\MF{-5}.
+\end{equation}
+These selection rules are the reason the main ZEPE branch, the closed virtual
+branch, and the absorb-absorb background can be channel-resolved.
+
+\medskip\hrule\medskip
+
+\section{Route A: full multichannel TDSE}
+
+\subsection{When to use it}
+
+Use the full TDSE when the goal is a direct, non-perturbative validation of the
+experimental protocol.  It is the cleanest conceptual calculation because no
+closed block is eliminated.  It should include at least
+\begin{equation}
+\boxed{\MF{-5},\quad\MF{-4},\quad\MF{-3},\quad\MF{-2}.}
+\end{equation}
+The roles are
+\begin{align}
+\MF{-4}:&\quad \text{initial halo and detected ZEPE final channel},\\
+\MF{-3}:&\quad \text{one-photon channel and absorb--emit intermediate},\\
+\MF{-2}:&\quad \text{absorb--absorb two-photon exit channel},\\
+\MF{-5}:&\quad \text{emit--absorb virtual branch back to }\MF{-4}.
+\end{align}
+
+\subsection{Why the calculation can be numerically heavy}
+
+The problem is not that one needs energies of order Hartree.  One does not.
+The relevant closed-block scales are GHz, not atomic-unit energies:
+\begin{equation}
+1\ {\rm GHz}=1.52\times10^{-7}\ {\rm Ha},
+\qquad
+10\ {\rm Ha}\simeq6.58\times10^{16}\ {\rm Hz}.
+\end{equation}
+Thus a cutoff of $10$ Ha is physically meaningless here: it is more than seven
+orders of magnitude above the square-well and threshold scales.
+
+The cost comes from two different sources:
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item A lab-frame time propagation would need to resolve GHz phases in the
+$\MF{-5}$ block.  This is avoided by using an interaction-picture eigenbasis.
+\item A box-eigenstate representation of the $\MF{-5}$ virtual resolvent may
+need many high-energy box modes for completeness.  Short-range sources require
+high-$k$ radial modes even though the physical intermediate energy is near the
+entrance threshold.
+\end{enumerate}
+
+\subsection{Recommended basis and energy cutoffs}
+
+Diagonalize each block separately, then pool the eigenstates.  Use the
+interaction-picture amplitudes, not lab-frame grid propagation.
+
+For the open/detected blocks $\MF{-4},\MF{-3},\MF{-2}$, choose the cutoff to
+cover all physically relevant outgoing features:
+\begin{equation}
+E_{\rm cut}^{\rm open}\gtrsim
+\max\left[20E_b,\;2\hbar\omega-E_b+5\hbar/\tau_0\right]
+\end{equation}
+above the corresponding lowest open threshold.  For the reference
+$\hbar\omega=8E_b$, this means the absorb-absorb feature sits at
+$15E_b$, so $E_{\rm cut}^{\rm open}=20$--$30E_b$ is normally adequate.
+
+For the closed $\MF{-5}$ block, a brute-force spectral TDSE needs a much larger
+cutoff measured in GHz, not in $E_b$:
+\begin{equation}
+\boxed{E_{\rm cut}^{(-5)}=5,\ 10,\ 20,\ 50\ {\rm GHz}\quad
+\text{above the lower }\MF{-5}\text{ threshold, tested for convergence}.}
+\end{equation}
+A practical starting point is $20$ GHz; continue to $50$ GHz if
+$P_{ea}/P_{ae}$ or the coherent peak height is still moving.  The criterion is
+not convergence of individual $\MF{-5}$ populations, which are virtual and
+basis-dependent, but convergence of physical observables:
+\begin{equation}
+P^{(-4)}_{\rm ZEPE},\qquad P^{(-2)}_{aa},\qquad
+E_{\rm peak}^{(-4)},\qquad \frac{P_{ea}}{P_{ae}},\qquad \Delta_{\rm coh}.
+\end{equation}
+Stop when these change by less than $1\%$ under a simultaneous increase of
+$E_{\rm cut}^{(-5)}$, $L$, and the smoothing resolution.
+
+\subsection{Full TDSE matrix}
+
+Let $\ket{i}$ denote a box/scattering-discretized eigenstate in one of the four
+blocks.  In the interaction picture,
+\begin{equation}
+\ket{\Psi(t)}=\sum_i b_i(t)e^{-iE_i t/\hbar}\ket{i}.
+\end{equation}
+The amplitude equation is
+\begin{equation}
+\boxed{
+ i\hbar\dot b_f(t)=\frac{\Omega_R}{2}\chi(t)
+ \sum_i \left[
+ d^{(+)}_{fi}e^{i(E_f-E_i-\hbar\omega)t/\hbar}
+ +d^{(-)}_{fi}e^{i(E_f-E_i+\hbar\omega)t/\hbar}
+ \right]b_i(t),}
+\end{equation}
+where
+\begin{equation}
+d^{(+)}_{fi}=\matel{f}{\eta^{(+)}}{i},\qquad d^{(-)}_{fi}=\matel{f}{\eta^{(-)}}{i}.
+\end{equation}
+No rotating-wave approximation should be made, because the ZEPE pathways use
+one positive- and one negative-frequency interaction.
+
+Initial condition:
+\begin{equation}
+b_h(0)=1,
+\qquad b_i(0)=0\quad(i\ne h).
+\end{equation}
+Recommended integrators: fourth-order commutator-free Magnus or adaptive RK4/5
+in the interaction picture.  A simple RK4 is acceptable only if convergence with
+respect to $\Delta t$ is checked.  A useful starting step is
+\begin{equation}
+\Delta t \lesssim \frac{2\pi}{30\omega},
+\end{equation}
+then halve $\Delta t$ until the spectra change by less than $1\%$.
+
+\subsection{Readout}
+
+After the pulse, compute separate spectra in each final $M_F$ block:
+\begin{equation}
+\frac{dP^{(M_F)}}{dE}(E)=\frac{1}{\sqrt{2\pi}\delta E}
+\sum_{f\in M_F}|b_f(T)|^2
+\exp\left[-\frac{(E-E_f)^2}{2\delta E^2}\right].
+\end{equation}
+Use $\delta E$ equal to one to two times the local level spacing near the peak.
+The main outputs are
+\begin{align}
+\frac{dP^{(-4)}}{dE}:&\quad \text{detected ZEPE channel},\\
+\frac{dP^{(-3)}}{dE}:&\quad \text{one-photon channel},\\
+\frac{dP^{(-2)}}{dE}:&\quad \text{absorb--absorb channel}.
+\end{align}
+The $\MF{-5}$ block should not be interpreted as an outgoing channel in this
+experiment; it is virtual unless a real population is found, which would signal
+breakdown of the far-detuned approximation.
+
+\subsection{Full-TDSE convergence checklist}
+
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item Halo binding: $E_h/h=-10.108\pm0.001$ kHz.
+\item Halo weights: $P_{\rm open}=0.99981$, $P_{\rm closed}=1.901\times10^{-4}$.
+\item Norm conservation: $|1-\sum_i|b_i(t)|^2|<10^{-6}$.
+\item Time-step convergence: halve $\Delta t$ and require $<1\%$ change in the peak and integrated yields.
+\item Open cutoff convergence: increase $E_{\rm cut}^{\rm open}$ from $20E_b$ to $30E_b$ or $40E_b$.
+\item Closed cutoff convergence: increase $E_{\rm cut}^{(-5)}=5,10,20,50$ GHz; do not use Hartree-scale cutoffs.
+\item Box convergence: double $L$ and rescale the smoothing width with the local level spacing.
+\item Weak-field check: in the perturbative limit, $P^{(-4)}_{\rm ZEPE}\propto B_{\rm RF}^4$, $P^{(-3)}_{1\gamma}\propto B_{\rm RF}^2$, and $P^{(-2)}_{aa}\propto B_{\rm RF}^4$.
+\end{enumerate}
+
+\medskip\hrule\medskip
+
+\section{Route B: hybrid open-channel TDSE plus closed-block resolvent}
+
+\subsection{What the hybrid method is}
+
+The hybrid method propagates the experimentally relevant open blocks in time
+and eliminates the far-detuned $\MF{-5}$ block with a resolvent.  It should be
+called exactly that:
+\begin{equation}
+\boxed{\text{open-channel TDSE }(\MF{-4},\MF{-3},\MF{-2})
+\; + \; \text{closed }\MF{-5}\text{ resolvent correction}.}
+\end{equation}
+It is not a literal full TDSE over all blocks.  It is justified because
+\begin{equation}
+\Delta_{m5}/h\simeq2.68\ {\rm GHz}\gg \omega/(2\pi)\sim50\text{--}100\ {\rm kHz},
+\qquad
+\Delta_{m5}\gg \hbar/\tau_0.
+\end{equation}
+Thus $\MF{-5}$ is only virtually occupied and can be eliminated perturbatively
+in the RF amplitude while being treated exactly in its own Hamiltonian.
+
+\subsection{Open-channel TDSE subspace}
+
+Use the pooled basis
+\begin{equation}
+\{\ket{i}\}_{\rm open}=\{\MF{-4}\}\cup\{\MF{-3}\}\cup\{\MF{-2}\}.
+\end{equation}
+Including $\MF{-2}$ is recommended.  It lets the calculation explicitly show
+where the absorb-absorb background goes:
+\begin{equation}
+\MF{-4}\xrightarrow{\rm absorb}\MF{-3}\xrightarrow{\rm absorb}\MF{-2}.
+\end{equation}
+If the only target is the detected $\MF{-4}$ ZEPE channel, $\MF{-2}$ can be
+omitted as a speed test, but the production calculation should include it.
+
+Propagate the same interaction-picture TDSE as in Route A, but only on this
+open subspace.  The detected $\MF{-4}$ amplitude from this propagation contains
+the open absorb-emit ZEPE branch through $\MF{-3}$ and all non-perturbative
+open-subspace corrections.
+
+\subsection{Closed $\MF{-5}$ resolvent equation}
+
+For each carrier frequency solve once
+\begin{equation}
+\boxed{(E_{\rm int}-H_{-5})X(r)=S(r),
+\qquad S(r)=\eta^{(-)}u_h(r),
+\qquad E_{\rm int}=E_h-\hbar\omega.}
+\end{equation}
+Here $\eta^{(-)}$ is the emission vertex from $\MF{-4}$ to $\MF{-5}$.  Discretize
+with the three-point block-tridiagonal scheme
+\begin{equation}
+A X_{j-1}+B_jX_j+A X_{j+1}=-S_j,
+\end{equation}
+\begin{equation}
+A=-\frac{1}{2\mu(\Delta r)^2}\one,
+\qquad
+B_j=\frac{1}{\mu(\Delta r)^2}\one+V_j^{(-5)}-E_{\rm int}\one.
+\end{equation}
+Boundary conditions:
+\begin{equation}
+X_0=0,
+\qquad
+X_{N,\alpha}=e^{-\kappa_\alpha\Delta r}X_{N-1,\alpha},
+\qquad
+\kappa_\alpha=\frac{\sqrt{2\mu(E_{{\rm th},\alpha}^{(-5)}-E_{\rm int})}}{\hbar}.
+\end{equation}
+In atomic units, drop the explicit $\hbar$ in the last formula.  Solve by
+block-Thomas in $O(N_{\rm grid})$ time.  A small channel dimension, here two
+channels, makes this very cheap and stable.
+
+Recommended closed-grid parameters:
+\begin{equation}
+\Delta r=0.01a_0\quad\text{for production},
+\qquad
+L_{-5}\text{ large enough that }X\text{ is negligible at the Robin boundary}.
+\end{equation}
+Start with the same large radial extent used for the halo tail; then halve
+$\Delta r$ or double $L_{-5}$ only if the physical observables change.
+
+\subsection{Closed-channel amplitude added to the TDSE result}
+
+For each final $\MF{-4}$ state,
+\begin{equation}
+\langle f|\eta^{(+)}X\rangle=
+\sum_\alpha\int_0^L u_f^{(\alpha)}(r)^*\,[\eta^{(+)}X]^{(\alpha)}(r)\dd r.
+\end{equation}
+The large-detuning pulse kernel is
+\begin{equation}
+J^{(+,-)}_{\rm LD}(E_f)=
+-i\hbar\tau_0\sqrt{\frac{\pi}{2}}
+\exp\left[-\frac{(E_f-E_h)^2\tau_0^2}{8\hbar^2}\right].
+\end{equation}
+Then
+\begin{equation}
+\boxed{c_f^{ea}=\frac{\Omega_R^2}{4\hbar^2}
+\langle f|\eta^{(+)}X\rangle J^{(+,-)}_{\rm LD}(E_f).}
+\end{equation}
+The final detected amplitude is
+\begin{equation}
+\boxed{b_f^{\rm det}(T)=b_f^{\rm open\ TDSE}(T)+c_f^{ea}.}
+\end{equation}
+The phase convention in this addition is important; see the validation checks below.
+
+\subsection{Hybrid validation checks}
+
+The hybrid result should not be trusted unless these checks pass:
+\begin{enumerate}[leftmargin=2em,itemsep=2pt]
+\item \textbf{Resolvent residual:}
+\begin{equation}
+\frac{\|(E_{\rm int}-H_{-5})X-S\|}{\|S\|}<10^{-10}\quad\text{or at least below the FD truncation floor.}
+\end{equation}
+\item \textbf{Born-limit scale:}
+\begin{equation}
+(|X|/|S|)\Delta_{m5}\simeq1,
+\qquad
+\Delta_{m5}=E_{{\rm th},-5}-E_{\rm int}.
+\end{equation}
+A deviation at the percent level is acceptable and reflects inside-well dynamics.
+\item \textbf{Weak-field phase calibration:} at small $B_{\rm RF}$, compare
+$\MF{-4}$ amplitudes from open-channel TDSE with explicit second-order
+perturbation theory for the $ae$ branch.  Magnitude and phase must agree.
+\item \textbf{Closed-kernel calibration:} verify the large-detuning formula
+against the full Faddeeva kernel for the $\MF{-5}$ bound spectrum, or against a
+controlled spectral calculation with the bound part subtracted from $X$ to avoid
+double counting.
+\item \textbf{No double counting:} the open TDSE must not include $\MF{-5}$ if
+$c_f^{ea}$ is added separately.
+\item \textbf{Power laws:} in the perturbative regime,
+$P_{\rm ZEPE}^{(-4)}\propto B_{\rm RF}^4$ and $P_{1\gamma}^{(-3)}\propto B_{\rm RF}^2$.
+\item \textbf{Operating-point check:} evaluate the hybrid method directly at
+$\tau_0=30\,\mu$s and $\hbar\omega=8E_b$, not only at $\hbar\omega=E_b/2$.
+Report $P_{ea}/P_{ae}$, $\Delta_{\rm coh}$, and the peak shift.
+\end{enumerate}
+
+\subsection{Why this route is usually recommended}
+
+The $\MF{-5}$ block is far detuned and only virtual.  Representing its effect by
+box eigenstates can require GHz-scale cutoffs and delicate cancellations between
+bound-like and continuum-like states.  The inhomogeneous solve computes exactly
+the object needed by the physics,
+\begin{equation}
+X=(E_{\rm int}-H_{-5})^{-1}S,
+\end{equation}
+without ever constructing the ill-conditioned spectral sum.  Therefore the
+hybrid method is the recommended production route unless a fully converged
+four-block TDSE is explicitly required.
+
+\medskip\hrule\medskip
+
+\section{Reference operating point and expected outputs}
+
+The recommended experimental ZEPE point is
+\begin{equation}
+\boxed{\tau_0=30\,\mu{\rm s},\qquad \hbar\omega=8E_b,
+\qquad \mu_Bg_SB_{\rm RF}/h\simeq179\ {\rm kHz}.}
+\end{equation}
+Expected square-well outputs:
+\begin{align}
+\frac{dP^{(-4)}}{dE}:&\quad \text{ZEPE peak at }E_{\rm peak}/k_B\simeq200\ {\rm nK},\\
+P_{\rm ZEPE}^{(-4)}:&\quad \sim5\times10^{-5}\text{ per molecule per shot in PT},\\
+P_{\rm ZEPE}^{(-4)}:&\quad \sim3.5\times10^{-5}\text{ per molecule per shot in TDSE},\\
+\frac{dP^{(-3)}}{dE}:&\quad \text{one-photon feature near }E=\hbar\omega-E_b\simeq3.4\,\mu{\rm K},\\
+P_{1\gamma}^{(-3)}:&\quad \sim5\times10^{-2}.
+\end{align}
+For the multichannel correction, report at this same point
+\begin{equation}
+\frac{P_{ea}}{P_{ae}},
+\qquad
+\Delta_{\rm coh}=\frac{P_{\rm coh}-P_{ae}}{P_{ae}},
+\qquad
+\frac{|E_{\rm peak}^{\rm coh}-E_{\rm peak}^{ae}|}{E_{\rm peak}^{ae}}.
+\end{equation}
+These three numbers are the cleanest diagnostics of whether the realistic
+multichannel structure preserves the ZEPE observable.
+
+\section{Short summary}
+
+\begin{itemize}[leftmargin=2em,itemsep=2pt]
+\item Do not use a $10$ Ha cutoff.  If diagonalizing $\MF{-5}$, think in
+GHz-scale cutoffs: $5$--$50$ GHz above the $\MF{-5}$ threshold.
+\item Full TDSE is conceptually clean but requires careful convergence of the
+$\MF{-5}$ virtual resolvent in a spectral basis.
+\item The hybrid method is more stable: propagate $\MF{-4},\MF{-3},\MF{-2}$ and
+eliminate $\MF{-5}$ with an inhomogeneous resolvent.
+\item Use $\sigma^+$ polarization for the clean isolation calculation.  Treat
+linear polarization only as an imperfection test.
+\item Validate phases before trusting coherent yield enhancements.
+\end{itemize}
+
+\end{document}

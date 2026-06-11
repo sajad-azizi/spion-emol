@@ -1,0 +1,46 @@
+T_a = 0.451621441191605 eV^-1, T_b = 6.451734874165786 eV^-1, tau_b = 0.683670357310987 eV^-1
+
+case 1
+  erf      = 4.9689192611723207-0.98689085757166506j
+  dawson   = 4.9689192611723207-0.98689085757166495j
+  quadrat. = 4.9689192611723225-0.98689085757166484j
+  rel[erf-quad]    = 3.534e-16
+  abs[erf-quad]    = 1.790e-15
+  rel[erf-dawson]  = 2.192e-17
+
+case 2
+  erf      = 4.1942384037836584+2.2867064550214002j
+  dawson   = 4.1942384037836584+2.2867064550214007j
+  quadrat. = 4.1942384037836602+2.2867064550214011j
+  rel[erf-quad]    = 4.157e-16
+  abs[erf-quad]    = 1.986e-15
+  rel[erf-dawson]  = 9.296e-17
+
+case 3
+  erf      = 4.576894919899706+0j
+  dawson   = 4.576894919899706+0j
+  quadrat. = 4.5768949198997051+0j
+  rel[erf-quad]    = 1.941e-16
+  abs[erf-quad]    = 8.882e-16
+  rel[erf-dawson]  = 0.000e+00
+
+case 4
+  erf      = 0.31553669738801721-0.043996478557386545j
+  dawson   = 0.31553669738801721-0.043996478557386545j
+  quadrat. = 0.31553669738801704-0.043996478557386531j
+  rel[erf-quad]    = 5.245e-16
+  abs[erf-quad]    = 1.671e-16
+  rel[erf-dawson]  = 0.000e+00
+
+case 5
+  erf      = 0.17018710749239876-0.38512135320731949j
+  dawson   = 0.17018710749239876-0.38512135320731949j
+  quadrat. = 0.17018710749239868-0.38512135320731944j
+  rel[erf-quad]    = 2.377e-16
+  abs[erf-quad]    = 1.001e-16
+  rel[erf-dawson]  = 0.000e+00
+
+summary
+  max relative error, analytic vs quadrature = 5.245e-16
+  max absolute error, analytic vs quadrature = 1.986e-15
+  max relative error, erf vs Dawson          = 9.296e-17
